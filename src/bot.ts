@@ -1,5 +1,7 @@
 import { Composer } from "telegraf";
+import { useArgs } from "./hooks/args";
 import { useProtect } from "./hooks/protect";
+import { shortenLink } from "./services/urlAPI";
 
 let allowedIds: Array<number> = [];
 
@@ -8,7 +10,13 @@ Bot.use(useProtect());
 
 Bot.start((context) => context.reply('Wow! Thanks!'));
 
-Bot.command('authorize', (context) => {
-  allowedIds.push(context.from?.id!);
-  return context.reply('Your is allowed!');
+Bot.command('short', async (context) => {
+  const [, [url, path]] = useArgs(context.message?.text!, ' ');
+  const shortened = await shortenLink(url, path);
+  context.replyWithMarkdown(
+    '*URL Curto:* `{url}`\n\n _Nota: Clique no link para copiar_'.replace('{url}', shortened.short),
+    {
+      parse_mode: 'MarkdownV2'
+    }
+  );
 });
