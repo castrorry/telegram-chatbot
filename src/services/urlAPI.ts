@@ -9,7 +9,7 @@ const API = Axios.create({
   baseURL: 'https://is.gd'
 });
 
-export async function shortenLink(link: string, customPath: string): Promise<IURLShort> {
+export async function shortenAPI(link: string, customPath: string): Promise<IURLShort> {
   const { data } = await API.get('/create.php', {
     params: {
       format: 'json',
